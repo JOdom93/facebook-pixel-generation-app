@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Generate Facebook Pixel Lazyload Code</title>
+	<style>
+		body{margin: 0; position: relative; background: #222; color: white; padding: 5% 0;}
+		*{box-sizing: border-box;}
+		.main-container{width: 1100px; max-width:100%; margin: 0 auto; padding: 0 25px;}
+		h1{text-align: center;}
+		textarea{width: 100%; min-height: 300px;}
+		.where-find{cursor: pointer;}
+		.explanation{ position: fixed; width: 100%; height: 100%; background: rgba(255 255 255 / 90%); left: 0; top: 0; backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; padding: 5% 25px; color: black;}
+		.explanation.active{display: flex; flex-direction: column;}
+		.explanation .content{widht: 1100px; margin: 0 auto;}
+	</style>
+</head>
+<body>
+	<div class="main-container">
+	  <h1>Generate Facebook Pixel Lazyload Code</h1>
+	  <p>
+	    <label for="fb-code-input">Enter Facebook Account Number </label>
+	  </p>
+	  <p>
+	    <input type="number" id="fb-code-input" onkeyup="if(event.keyCode == 13){loadFB(this.value)}">
+	    <span class="where-find" onclick="document.querySelector(`.explanation`).classList.add(`active`)">Where do I find this?</span>
+	  </p>
+	  <p class="codeblock;">
+	    <label style="display: block;" for="output">Your New Lazy Loaded Code</label>
+	  <textarea readonly name="" id="output" cols="" rows=""></textarea>
+	  </p>
+
+	  <div class="explanation" onclick="this.classList.remove('active')">
+	    <div class="content">
+	      <h3>This is what a Facebook pixel looks like out-of-the-box:</h3>
+	      <code>
+	        &lt;!-- Facebook Pixel Code --&gt;
+	        &lt;script&gt;
+	        !function(f,b,e,v,n,t,s)
+	        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+	        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+	        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+	        n.queue=[];t=b.createElement(e);t.async=!0;
+	        t.src=v;s=b.getElementsByTagName(e)[0];
+	        s.parentNode.insertBefore(t,s)}(window, document,'script',
+	        'https://connect.facebook.net/en_US/fbevents.js');
+	        <span style="background; gray; color: red; display: inline-block;">fbq('init', '197479114826823');</span>
+	        fbq('track', 'PageView');
+	        &lt;/script&gt;
+	        &lt;noscript&gt;&lt;img height="1" width="1" style="display:none"
+	        src="https://www.facebook.com/tr?id=197479114826823&ev=PageView&noscript=1"
+	        /&gt;&lt;/noscript&gt;
+	        &lt;!-- End Facebook Pixel Code --&gt;
+	      </code>
+	      <p>
+	      In your own pixel, locate this line: <span style="background; gray; color: red; display: inline-block;">fbq('init', '197479114826823');</span></p>
+	        <p>Whatever the number is in that line will be entered into the "Facbook Account Number" box.</p>
+	    </div>
+	    <p><em>click anywhere to exit</em></p>
+	  </div>
+	</div>
+	<script>
+	function loadFB(viewNumber){
+		let newFbCode = `<script>
+		  function fbLoaded(f,b,e,v,n,t,s){
+		    if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+		    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+		    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+		    n.queue=[];t=b.createElement(e);t.async=!0;
+		    t.src=v;s=b.getElementsByTagName(e)[0];
+		    s.parentNode.insertBefore(t,s)
+		  }
+		  setTimeout(()=>{
+		    fbLoaded(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
+		    fbq('init', "${viewNumber}");
+		    fbq('track', 'PageView');
+		  }, 2000);
+		</script>`;
+		  document.querySelector("#output").value = newFbCode;
+		  document.querySelector("#output").classList.add("active");
+		  document.querySelector("#output").select();
+		  document.execCommand('copy');
+		  alert("Your lazyloaded FB pixel was copied to your clipboard");
+		}
+	</script>
+</body>
+</html>
